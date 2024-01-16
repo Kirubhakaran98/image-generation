@@ -10,7 +10,7 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://flask-service-dot-kk-demo-411412.df.r.appspot.com', { names: [name] });
+            const response = await axios.post('https://flask-service-dot-kk-demo-411412.df.r.appspot.com/generate-image', { names: [name] });
             setImageSrc(`data:image/jpeg;base64,${response.data.image}`);
         } catch (error) {
             console.error('Error generating image:', error);
