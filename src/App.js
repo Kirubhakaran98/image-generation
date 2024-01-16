@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import './App.css'; // Import your CSS file
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [name, setName] = useState('');
+    const [imageSrc, setImageSrc] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/generate-image', { names: [name] });
+            setImageSrc(`data:image/jpeg;base64,${response.data.image}`);
+        } catch (error) {
+            console.error('Error generating image:', error);
+        }
+    };
+
+    return (
+        <Container className="p-3">
+            <Form onSubmit={handleSubmit}>
+                <Row>
+                    <Col md={8}>
+                        <Form.Control 
+                            type="text" 
+                            placeholder="Enter Name" 
+                            value={name} 
+                            onChange={(e) => setName(e.target.value)} 
+                        />
+                    </Col>
+                    <Col>
+                        <Button variant="primary" type="submit">Generate Image</Button>
+                    </Col>
+                </Row>
+            </Form>
+            {imageSrc && (
+                <div className="image-container">
+                    <img src={imageSrc} alt="Generated" />
+                </div>
+            )}
+        </Container>
+    );
 }
 
 export default App;
